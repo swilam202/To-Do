@@ -1,7 +1,8 @@
 import 'dart:io';
-
+import '../../services/theme_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 
 import '../theme.dart';
 
@@ -22,7 +23,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         leading: IconButton(
           icon: Icon(Platform.isIOS ? Icons.arrow_back_ios : Icons.arrow_back),
           onPressed: () {
-            Get.back();
+            //ThemeServices().switchTheme();
           },
         ),
         title: Text(
