@@ -5,6 +5,16 @@ class MyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return ElevatedButton(
+      onPressed: () {},
+      child: Text(
+        'add task',
+      ),
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Colors.blue),
+        shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+      ),
+    );
   }
 }

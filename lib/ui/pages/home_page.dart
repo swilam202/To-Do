@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../services/theme_services.dart';
 import '../theme.dart';
+import '../widgets/button.dart';
+import '../widgets/input_field.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,7 +25,12 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      body: Container(),
+      body: Center(
+        child: InputField(
+          label: 'Title',
+          hint: 'enter data',
+        ),
+      ),
     );
   }
 }
