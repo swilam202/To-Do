@@ -14,17 +14,12 @@ class Themes {
   static final lightTheme = ThemeData(
     primaryColor: Colors.white,
     brightness: Brightness.light,
-    canvasColor: Color.fromRGBO(187, 187, 187, 1.0),
   );
   static final darkTheme = ThemeData(
-    primaryColor: Color(0xFF101023),
+    primaryColor: darkGreyClr,
     brightness: Brightness.dark,
-    canvasColor: Color.fromRGBO(93, 92, 92, 1.0),
   );
-
-
 }
-
 
 TextStyle get headingStyle {
   return GoogleFonts.lato(
