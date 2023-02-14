@@ -137,7 +137,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Color'),
-                  MyButton(),
+                  MyButton(title: 'Add task',fun: (){},),
                 ],
               ),
               Row(

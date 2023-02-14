@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 class MyButton extends StatelessWidget {
-  MyButton({Key? key}) : super(key: key);
-
+  MyButton({Key? key,required this.fun,required this.title}) : super(key: key);
+  final Function() fun;
+  String title;
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: (){},
+      onPressed: fun,
       child: Text(
-        'add task',
+        title,
       ),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(Colors.blue),

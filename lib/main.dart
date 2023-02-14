@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'services/notification_services.dart';
 import 'services/theme_services.dart';
 import 'ui/pages/add_task_page.dart';
 import 'ui/pages/home_page.dart';
@@ -9,6 +10,8 @@ import 'ui/theme.dart';
 
 void main() {
   runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+ /// NotifyHelper().initializeNotification();
 }
 
 class MyApp extends StatelessWidget {

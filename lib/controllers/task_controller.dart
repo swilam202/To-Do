@@ -1,1 +1,4 @@
-class TaskController {}
+class TaskController {
+  List taskList = [];
+
+}
