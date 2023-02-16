@@ -40,7 +40,7 @@ TextStyle get titleStyle {
 TextStyle get subTitleStyle {
   return GoogleFonts.lato(
       textStyle: TextStyle(
-          fontSize: 14,
+          fontSize: 15,
           fontWeight: FontWeight.w400,
           color: Get.isDarkMode ? Colors.white : Colors.black));
 }
@@ -56,7 +56,7 @@ TextStyle get bodyStyle {
 TextStyle get body2Style {
   return GoogleFonts.lato(
       textStyle: TextStyle(
-          fontSize: 14,
+          fontSize: 10,
           fontWeight: FontWeight.w400,
           color: Get.isDarkMode ? Colors.grey[200] : Colors.black));
 }

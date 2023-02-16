@@ -8,6 +8,7 @@ import 'package:todoapp/ui/widgets/button.dart';
 import 'package:todoapp/ui/widgets/input_field.dart';
 
 import '../../controllers/task_controller.dart';
+import '../../models/task.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({Key? key}) : super(key: key);
@@ -77,7 +78,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
               InputField(
                 label: 'Date',
                 hint: selectedDate.toString(),
-                widget: Icon(Icons.calendar_today_rounded),
+                widget: IconButton(
+                  icon: Icon(Icons.calendar_today_rounded),
+                  onPressed: () => selDate(),
+                ),
               ),
               Row(
                 children: [
@@ -85,7 +89,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     child: InputField(
                       label: 'Start Date',
                       hint: startDate,
-                      widget: Icon(Icons.access_time),
+                      widget: IconButton(
+                        icon: Icon(Icons.access_time),
+                        onPressed: () => selseDate(true),
+                      ),
                     ),
                   ),
                   SizedBox(width: 10),
@@ -93,7 +100,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     child: InputField(
                       label: 'End Date',
                       hint: endDate,
-                      widget: Icon(Icons.access_time),
+                      widget: IconButton(
+                        icon: Icon(Icons.access_time),
+                        onPressed: () => selseDate(false),
+                      ),
                     ),
                   ),
                 ],
@@ -137,7 +147,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Color'),
-                  MyButton(title: 'Add task',fun: (){},),
+                  MyButton(
+                    title: 'Add task',
+                    fun: () => validateData(),
+                  ),
                 ],
               ),
               Row(
@@ -171,5 +184,64 @@ class _AddTaskPageState extends State<AddTaskPage> {
         ),
       ),
     );
+  }
+
+  validateData() async {
+    if (titleController.text.isNotEmpty && noteController.text.isNotEmpty ) {
+      addTaskToDB();
+      Get.back();
+    }
+    else  {
+      Get.snackbar('Warning', 'the title, note fields must not be null and make sure Start Date is earlier than End Date',
+          snackPosition: SnackPosition.BOTTOM,
+          icon: Icon(
+            Icons.warning_amber,
+            color: Colors.red,
+          ),
+          colorText: Colors.red,
+          backgroundColor: Get.isDarkMode ? Colors.black38 : Colors.white70);
+    }
+
+
+  }
+
+  addTaskToDB() async {
+    int val = await _taskController.addTask(Task(
+      title: titleController.text,
+      note: noteController.text,
+      isCompleted: 0,
+      date: DateFormat.yMd().format(selectedDate),
+      endTime: endDate,
+      startTime: startDate,
+      remind: selectedRemind,
+      repeat: selectedRepeat,
+      color: selectedColor,
+    ));
+  }
+
+  selDate() async {
+    DateTime? date = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(DateTime.now().year - 5),
+        lastDate: DateTime(DateTime.now().year + 5));
+    if (date != null) setState(() => selectedDate = date);
+  }
+
+  selseDate(bool istart) async {
+    var date;
+    if (istart)
+      date = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.fromDateTime(DateTime.now()));
+    else
+      date = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.fromDateTime(
+              DateTime.now().add(Duration(minutes: 15))));
+    String formatted = date.format(context);
+    if (istart)
+      setState(() => startDate = formatted);
+    else if (!istart) setState(() => endDate = formatted);
   }
 }
