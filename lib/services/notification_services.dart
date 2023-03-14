@@ -3,6 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -22,8 +23,12 @@ class NotifyHelper {
 
   initializeNotification() async {
     tz.initializeTimeZones();
+  //  _configureSelectNotificationSubject();
+    await _configureLocalTimeZone();
+
     final AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('icon');
+
     final DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
       requestSoundPermission: false,
@@ -75,22 +80,24 @@ class NotifyHelper {
 
 
   scheduledNotification(int hour, int minutes, Task task) async {
+    tz.initializeTimeZones();
+    //tz.setLocalLocation(tz.getLocation('cairo'));
     await flutterLocalNotificationsPlugin.zonedSchedule(
       task.id!,
       task.title,
       task.note,
-      //tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+      //tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5));
       _nextInstanceOfTenAM(hour, minutes),
       const NotificationDetails(
         android: AndroidNotificationDetails(
-            'your channel id', 'your channel name', ),
-      ),
+            'your channel id', 'your channel name',channelDescription: 'your channel description'),),
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
       UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
       payload: '${task.title}|${task.note}|${task.startTime}|',
     );
+    return 0;
   }
 
   tz.TZDateTime _nextInstanceOfTenAM(int hour, int minutes) {

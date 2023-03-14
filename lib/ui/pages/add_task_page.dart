@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:todoapp/db/db_helper.dart';
 import 'package:todoapp/ui/theme.dart';
 import 'package:todoapp/ui/widgets/button.dart';
 import 'package:todoapp/ui/widgets/input_field.dart';
@@ -18,6 +19,7 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
+
   final TaskController _taskController = Get.put(TaskController());
   final TextEditingController titleController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
@@ -30,6 +32,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
   String selectedRepeat = 'None';
   List<String> repeatList = ['None', 'Daily', 'Weekly', 'Monthly'];
   int selectedColor = 0;
+  DBHelper dbHelper = DBHelper();
+
 
   @override
   Widget build(BuildContext context) {
@@ -77,10 +81,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
               ),
               InputField(
                 label: 'Date',
-                hint: selectedDate.toString(),
+                hint: DateFormat.yMd().format(selectedDate),
                 widget: IconButton(
                   icon: Icon(Icons.calendar_today_rounded),
-                  onPressed: () => selDate(),
+                  onPressed: () => selectDate(),
                 ),
               ),
               Row(
@@ -91,7 +95,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       hint: startDate,
                       widget: IconButton(
                         icon: Icon(Icons.access_time),
-                        onPressed: () => selseDate(true),
+                        onPressed: () => selectStartEndDate(true),
                       ),
                     ),
                   ),
@@ -102,7 +106,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       hint: endDate,
                       widget: IconButton(
                         icon: Icon(Icons.access_time),
-                        onPressed: () => selseDate(false),
+                        onPressed: () => selectStartEndDate(false),
                       ),
                     ),
                   ),
@@ -117,7 +121,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         (e) => DropdownMenuItem(
                           child: Text(
                             '$e',
-                            style: TextStyle(),
+
                           ),
                           value: e,
                         ),
@@ -149,7 +153,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   Text('Color'),
                   MyButton(
                     title: 'Add task',
-                    fun: () => validateData(),
+                    fun: () {
+                      validateData();
+                      _taskController.getTask();
+                    }
                   ),
                 ],
               ),
@@ -216,10 +223,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
       remind: selectedRemind,
       repeat: selectedRepeat,
       color: selectedColor,
-    ));
+    ),);
   }
 
-  selDate() async {
+  selectDate() async {
     DateTime? date = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
@@ -228,20 +235,20 @@ class _AddTaskPageState extends State<AddTaskPage> {
     if (date != null) setState(() => selectedDate = date);
   }
 
-  selseDate(bool istart) async {
+  selectStartEndDate(bool isStart) async {
     var date;
-    if (istart)
+    if (isStart)
       date = await showTimePicker(
           context: context,
-          initialTime: TimeOfDay.fromDateTime(DateTime.now()));
+          initialTime: TimeOfDay.fromDateTime(DateTime.now()),);
     else
       date = await showTimePicker(
           context: context,
           initialTime: TimeOfDay.fromDateTime(
-              DateTime.now().add(Duration(minutes: 15))));
+              DateTime.now().add(Duration(minutes: 15),),),);
     String formatted = date.format(context);
-    if (istart)
+    if (isStart)
       setState(() => startDate = formatted);
-    else if (!istart) setState(() => endDate = formatted);
+    else if (!isStart) setState(() => endDate = formatted);
   }
 }

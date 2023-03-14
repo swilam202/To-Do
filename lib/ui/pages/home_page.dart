@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:todoapp/controllers/task_controller.dart';
+import 'package:todoapp/db/db_helper.dart';
 import 'package:todoapp/models/task.dart';
 import '../../services/notification_services.dart';
 import '../../services/theme_services.dart';
@@ -29,7 +30,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   DateTime currentDate = DateTime.now();
   TaskController taskController = Get.put(TaskController());
+
   late NotifyHelper notifyHelper;
+
+  //DBHelper dbHelper = DBHelper();
 
   @override
   void initState() {
@@ -38,6 +42,9 @@ class _HomePageState extends State<HomePage> {
     notifyHelper = NotifyHelper();
     notifyHelper.initializeNotification();
     notifyHelper.requestIOSPermission();
+
+    DBHelper.init();
+    taskController.getTask();
   }
 
   @override
@@ -53,10 +60,27 @@ class _HomePageState extends State<HomePage> {
               Icon(Get.isDarkMode ? Icons.nightlight_round_sharp : Icons.sunny),
           onPressed: () {
             ThemeServices().switchTheme();
-            //  notifyHelper.displyNotifcation(title: '', body: 'Theme Changed');
+
             // notifyHelper.sechduleNotification();
           },
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                DBHelper.init();
+              },
+              icon: Icon(Icons.add, color: Colors.blue)),
+          IconButton(
+              onPressed: () async {
+                taskController.getTask();
+              },
+              icon: Icon(Icons.mark_as_unread_outlined, color: Colors.blue)),
+          IconButton(
+              onPressed: () {
+                DBHelper.deleteDB();
+              },
+              icon: Icon(Icons.delete, color: Colors.blue)),
+        ],
       ),
       body: Container(
         margin: EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 5),
@@ -82,6 +106,9 @@ class _HomePageState extends State<HomePage> {
               monthTextStyle: subTitleStyle,
               dayTextStyle: subTitleStyle,
               dateTextStyle: headingStyle,
+              onDateChange: (newVal)=>setState(() {
+                currentDate = newVal;
+              }),
             ),
             Expanded(
               child: tasks(),
@@ -92,52 +119,52 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Expanded emptyFunction() {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Wrap(
-          direction: SizeConfig.orientation == Orientation.landscape
-              ? Axis.horizontal
-              : Axis.vertical,
-          alignment: WrapAlignment.center,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            SizedBox(height: 50),
-            SvgPicture.asset(
-              'images/task.svg',
-              color: primaryClr.withOpacity(0.7),
-              semanticsLabel: 'Task image',
-              width: SizeConfig.orientation == Orientation.portrait ? 200 : 50,
-              height: SizeConfig.orientation == Orientation.portrait ? 200 : 50,
-            ),
-            Text(
-              'No tasks for today!',
-              style: headingStyle,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  taskFunction() {
-    return ListView.builder(
-      itemBuilder: (_, index) {
-        return TaskTile(
-          Task(
-            title: 'title',
-            note:
-                'iih uehuyewi hu iuyrew eheuewfiuyefwfu whfuweiuyfhefiheuf uyfefgewiuh note jjoflsdjefoi jh uhfiekhf if ',
-            isCompleted: 0,
-            startTime: '10:10',
-            endTime: '20:50',
-            color: 0,
-          ),
-        );
-      },
-      itemCount: 3,
-    );
-  }
+  // Expanded emptyFunction() {
+  //   return Expanded(
+  //     child: SingleChildScrollView(
+  //       child: Wrap(
+  //         direction: SizeConfig.orientation == Orientation.landscape
+  //             ? Axis.horizontal
+  //             : Axis.vertical,
+  //         alignment: WrapAlignment.center,
+  //         crossAxisAlignment: WrapCrossAlignment.center,
+  //         children: [
+  //           SizedBox(height: 50),
+  //           SvgPicture.asset(
+  //             'images/task.svg',
+  //             color: primaryClr.withOpacity(0.7),
+  //             semanticsLabel: 'Task image',
+  //             width: SizeConfig.orientation == Orientation.portrait ? 200 : 50,
+  //             height: SizeConfig.orientation == Orientation.portrait ? 200 : 50,
+  //           ),
+  //           Text(
+  //             'No tasks for today!',
+  //             style: headingStyle,
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+  //
+  // taskFunction() {
+  //   return ListView.builder(
+  //     itemBuilder: (_, index) {
+  //       return TaskTile(
+  //         Task(
+  //           title: 'title',
+  //           note:
+  //               'iih uehuyewi hu iuyrew eheuewfiuyefwfu whfuweiuyfhefiheuf uyfefgewiuh note jjoflsdjefoi jh uhfiekhf if ',
+  //           isCompleted: 0,
+  //           startTime: '10:10',
+  //           endTime: '20:50',
+  //           color: 0,
+  //         ),
+  //       );
+  //     },
+  //     itemCount: 3,
+  //   );
+  // }
 
   showButtomSheet(Task task) {
     return Get.bottomSheet(SingleChildScrollView(
@@ -157,9 +184,20 @@ class _HomePageState extends State<HomePage> {
           children: [
             task.isCompleted == 0
                 ? buttomsheetbutton(
-                    label: 'Completed', tab: () {}, colour: Colors.blue)
+                    label: 'Completed',
+                    tab: () {
+                      taskController.updateTask(task.id!);
+                      Get.back();
+                    },
+                    colour: Colors.blue)
                 : Container(),
-            buttomsheetbutton(label: 'Delete', tab: () {}, colour: Colors.red),
+            buttomsheetbutton(
+                label: 'Delete',
+                tab: () {
+                  taskController.deleteTask(task.id!);
+                  Get.back();
+                },
+                colour: Colors.red),
             buttomsheetbutton(
                 label: 'Cancel', tab: () => Get.back(), colour: Colors.green),
           ],
@@ -183,70 +221,85 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
-            child: Text(
-          label,
-          style: headingStyle.copyWith(color: Colors.white),
-        )),
+          child: Text(
+            label,
+            style: headingStyle.copyWith(color: Colors.white),
+          ),
+        ),
       ),
     );
   }
 
   tasks() {
-    if (!taskController.taskList.isEmpty) {
-      return ListView.builder(
-        // scrollDirection: SizeConfig.orientation == Orientation.landscape ? Axis.horizontal:Axis.horizontal,
-        itemBuilder: (_, index) {
-          var task = taskController.taskList[index];
-          var hours = task.endTime.toString().split(':')[0];
-          var minute = task.endTime.toString().split(':')[1];
-          notifyHelper.scheduledNotification(
-              int.parse(hours), int.parse(minute), task);
-          notifyHelper.displyNotifcation(title: '', body: 'Theme ');
-          return AnimationConfiguration.staggeredList(
-            duration: Duration(seconds: 1),
-            position: index,
-            child: SlideAnimation(
-              verticalOffset: 500,
-              horizontalOffset: -500,
-              child: FadeInAnimation(
-                child: GestureDetector(
-                    onTap: () => showButtomSheet(task), child: TaskTile(task)),
+    return Obx(() => (taskController.taskList.isNotEmpty)
+        ? RefreshIndicator(
+            onRefresh: () => taskController.getTask(),
+            child: ListView.builder(
+              // scrollDirection: SizeConfig.orientation == Orientation.landscape ? Axis.horizontal:Axis.horizontal,
+              itemBuilder: (_, index) {
+                var task = taskController.taskList[index];
+                if (task.date == DateFormat.yMd().format(currentDate) ||
+                    task.repeat == 'Daily') {
+                  var hours = task.endTime.toString().split(':')[0];
+                  var minute =
+                      task.endTime.toString().split(':')[1].substring(0, 2);
+                  notifyHelper.scheduledNotification(
+                      int.parse(hours), int.parse(minute), task);
+                  // notifyHelper.displyNotifcation(title: 'hello', body: 'task ');
+                  return AnimationConfiguration.staggeredList(
+                    duration: Duration(milliseconds: 500),
+                    position: index,
+                    child: SlideAnimation(
+                      verticalOffset: 500,
+                      horizontalOffset: -500,
+                      child: FadeInAnimation(
+                        child: GestureDetector(
+                          onTap: () {
+                            showButtomSheet(task);
+                            print('++++++++++++++++++++$hours++++++++++++');
+                            print('*****************$minute******************');
+                          },
+                          child: TaskTile(task),
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return SizedBox();
+                }
+              },
+              itemCount: taskController.taskList.length,
+            ),
+          )
+        : RefreshIndicator(
+            onRefresh: () => taskController.getTask(),
+            child: SingleChildScrollView(
+              child: Wrap(
+                direction: SizeConfig.orientation == Orientation.landscape
+                    ? Axis.horizontal
+                    : Axis.vertical,
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  SizedBox(height: 50),
+                  SvgPicture.asset(
+                    'images/task.svg',
+                    color: primaryClr.withOpacity(0.7),
+                    semanticsLabel: 'Task image',
+                    width: SizeConfig.orientation == Orientation.portrait
+                        ? 200
+                        : 50,
+                    height: SizeConfig.orientation == Orientation.portrait
+                        ? 200
+                        : 50,
+                  ),
+                  Text(
+                    'No tasks for today!',
+                    style: headingStyle,
+                  ),
+                ],
               ),
             ),
-          );
-        },
-        itemCount: taskController.taskList.length,
-      );
-    }
-    else {
-      return Container();
-      // return Expanded(
-      //   child: SingleChildScrollView(
-      //     child: Wrap(
-      //       direction: SizeConfig.orientation == Orientation.landscape
-      //           ? Axis.horizontal
-      //           : Axis.vertical,
-      //       alignment: WrapAlignment.center,
-      //       crossAxisAlignment: WrapCrossAlignment.center,
-      //       children: [
-      //         SizedBox(height: 50),
-      //         SvgPicture.asset(
-      //           'images/task.svg',
-      //           color: primaryClr.withOpacity(0.7),
-      //           semanticsLabel: 'Task image',
-      //           width:
-      //               SizeConfig.orientation == Orientation.portrait ? 200 : 50,
-      //           height:
-      //               SizeConfig.orientation == Orientation.portrait ? 200 : 50,
-      //         ),
-      //         Text(
-      //           'No tasks for today!',
-      //           style: headingStyle,
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // );
-    }
+          ));
   }
 }

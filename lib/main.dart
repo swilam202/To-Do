@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:todoapp/controllers/task_controller.dart';
 
 import 'db/db_helper.dart';
 import 'services/notification_services.dart';
@@ -13,7 +14,7 @@ import 'ui/theme.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 GetStorage.init();
-//DBHelper.init();
+
   runApp(MyApp());
 
 }
@@ -21,6 +22,7 @@ GetStorage.init();
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return GetMaterialApp(
         theme: Themes.lightTheme,
         darkTheme: Themes.darkTheme,

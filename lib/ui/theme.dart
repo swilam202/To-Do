@@ -26,7 +26,7 @@ TextStyle get headingStyle {
       textStyle: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: Get.isDarkMode ? Colors.white : Colors.black));
+          color: Get.isDarkMode ? Colors.white : Colors.black),);
 }
 
 TextStyle get titleStyle {
@@ -34,7 +34,7 @@ TextStyle get titleStyle {
       textStyle: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Get.isDarkMode ? Colors.white : Colors.black));
+          color: Get.isDarkMode ? Colors.white : Colors.black),);
 }
 
 TextStyle get subTitleStyle {
@@ -42,7 +42,7 @@ TextStyle get subTitleStyle {
       textStyle: TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w400,
-          color: Get.isDarkMode ? Colors.white : Colors.black));
+          color: Get.isDarkMode ? Colors.white : Colors.black),);
 }
 
 TextStyle get bodyStyle {
@@ -50,7 +50,7 @@ TextStyle get bodyStyle {
       textStyle: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: Get.isDarkMode ? Colors.white : Colors.black));
+          color: Get.isDarkMode ? Colors.white : Colors.black),);
 }
 
 TextStyle get body2Style {
@@ -58,5 +58,5 @@ TextStyle get body2Style {
       textStyle: TextStyle(
           fontSize: 10,
           fontWeight: FontWeight.w400,
-          color: Get.isDarkMode ? Colors.grey[200] : Colors.black));
+          color: Get.isDarkMode ? Colors.grey[200] : Colors.black),);
 }

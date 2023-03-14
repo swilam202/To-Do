@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-
+import 'package:path/path.dart';
 import '../models/task.dart';
 
 class DBHelper {
@@ -7,37 +7,31 @@ class DBHelper {
   static const int _version = 1;
   static const String _dbName = 'tasks';
 
-  static init() async {
-    if (_db != null)
-      print('DataBase already exisits');
-    else {
-      try {
-        String path = await getDatabasesPath() + 'path.db';
+   static init() async {
+        String dbPath = await getDatabasesPath();
+        String path = await join(dbPath,'tod.db');
         _db = await openDatabase(path, version: _version,
             onCreate: (Database db, int version) async {
-          await db.execute(
+
+           return db.execute(
             'CREATE TABLE $_dbName('
                 'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-                'title STRING, note TEXT, date STRING, '
-                'startTime STRING, endTime STRING, '
-                'remind INTEGER, repeat STRING, '
+                'title TEXT, note TEXT, date TEXT, '
+                'startTime TEXT, endTime TEXT, '
+                'remind INTEGER, repeat TEXT, '
                 'color INTEGER, '
-                'isCompleted INTEGER)',);
+                'isCompleted INTEGER)'
+          );
         });
-      } catch (e) {
-        print(e);
-      }
-    }
+
   }
 
-  static Future insert(Task task) async {
-    print('data inserted');
+   static Future insert(Task task) async {
     return await _db!.insert(_dbName, task.toJson());
   }
 
-  static Future delete(Task task) async {
-    print('data deleted');
-    return await _db!.delete(_dbName, where: 'id = ?', whereArgs: [task.id]);
+  static Future delete(int id) async {
+    return await _db!.delete(_dbName, where: 'id = ?', whereArgs: [id]);
   }
 
   static Future update(int id) async {
@@ -50,7 +44,13 @@ class DBHelper {
   }
 
   static Future<List<Map<String, dynamic>>>query()async{
-    print('query done');
     return await _db!.query(_dbName);
+  }
+
+  static deleteDB()async{
+    String dbPath = await getDatabasesPath();
+    String path = await join(dbPath,'tod.db');
+    deleteDatabase(path);
+    print('+++++++++++++++DATABASE deleted++++++++++++');
   }
 }
