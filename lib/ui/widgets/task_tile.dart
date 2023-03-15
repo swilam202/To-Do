@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:todoapp/ui/theme.dart';
-
 import '../../models/task.dart';
 
 class TaskTile extends StatelessWidget {
@@ -33,9 +32,18 @@ class TaskTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Icon(Icons.access_time,color: Colors.white,),
-                      Text(task.startTime!,style: TextStyle(color: Colors.white),),
-                      Text(task.endTime!,style: TextStyle(color: Colors.white),),
+                      Icon(
+                        Icons.access_time,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        task.startTime!,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        task.endTime!,
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ],
                   ),
                   SizedBox(height: 20),
@@ -56,16 +64,13 @@ class TaskTile extends StatelessWidget {
           ),
           RotatedBox(
             quarterTurns: 3,
-            child: Text(task.isCompleted == 0 ? 'To be done' : 'Completed',style: TextStyle(color: Colors.white),),
+            child: Text(
+              task.isCompleted == 0 ? 'To be done' : 'Completed',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
     );
   }
 }
-
-
-
-
-
-

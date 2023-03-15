@@ -37,19 +37,16 @@ class Task {
     };
   }
 
-   Task.fromJson(Map<String, dynamic> json) {
-      id= json['id'];
-      title= json['title'];
-      note= json['note'];
-      isCompleted= json['isCompleted'];
-      date= json['date'];
-      startTime= json['startTime'];
-      endTime= json['endTime'];
-      color= json['color'];
-      remind= json['remind'];
-      repeat= json['repeat'];
-
+  Task.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    title = json['title'];
+    note = json['note'];
+    isCompleted = json['isCompleted'];
+    date = json['date'];
+    startTime = json['startTime'];
+    endTime = json['endTime'];
+    color = json['color'];
+    remind = json['remind'];
+    repeat = json['repeat'];
   }
-
-
 }

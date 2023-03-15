@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +6,6 @@ import 'package:todoapp/db/db_helper.dart';
 import 'package:todoapp/ui/theme.dart';
 import 'package:todoapp/ui/widgets/button.dart';
 import 'package:todoapp/ui/widgets/input_field.dart';
-
 import '../../controllers/task_controller.dart';
 import '../../models/task.dart';
 
@@ -19,7 +17,6 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
-
   final TaskController _taskController = Get.put(TaskController());
   final TextEditingController titleController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
@@ -33,7 +30,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
   List<String> repeatList = ['None', 'Daily', 'Weekly', 'Monthly'];
   int selectedColor = 0;
   DBHelper dbHelper = DBHelper();
-
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +117,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         (e) => DropdownMenuItem(
                           child: Text(
                             '$e',
-
                           ),
                           value: e,
                         ),
@@ -152,12 +147,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 children: [
                   Text('Color'),
                   MyButton(
-                    title: 'Add task',
-                    fun: () {
-                      validateData();
-                      _taskController.getTask();
-                    }
-                  ),
+                      title: 'Add task',
+                      fun: () {
+                        validateData();
+                        _taskController.getTask();
+                      }),
                 ],
               ),
               Row(
@@ -194,12 +188,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   validateData() async {
-    if (titleController.text.isNotEmpty && noteController.text.isNotEmpty ) {
+    if (titleController.text.isNotEmpty && noteController.text.isNotEmpty) {
       addTaskToDB();
       Get.back();
-    }
-    else  {
-      Get.snackbar('Warning', 'the title, note fields must not be null and make sure Start Date is earlier than End Date',
+    } else {
+      Get.snackbar('Warning',
+          'the title, note fields must not be null and make sure Start Date is earlier than End Date',
           snackPosition: SnackPosition.BOTTOM,
           icon: Icon(
             Icons.warning_amber,
@@ -208,22 +202,22 @@ class _AddTaskPageState extends State<AddTaskPage> {
           colorText: Colors.red,
           backgroundColor: Get.isDarkMode ? Colors.black38 : Colors.white70);
     }
-
-
   }
 
   addTaskToDB() async {
-    int val = await _taskController.addTask(Task(
-      title: titleController.text,
-      note: noteController.text,
-      isCompleted: 0,
-      date: DateFormat.yMd().format(selectedDate),
-      endTime: endDate,
-      startTime: startDate,
-      remind: selectedRemind,
-      repeat: selectedRepeat,
-      color: selectedColor,
-    ),);
+    int val = await _taskController.addTask(
+      Task(
+        title: titleController.text,
+        note: noteController.text,
+        isCompleted: 0,
+        date: DateFormat.yMd().format(selectedDate),
+        endTime: endDate,
+        startTime: startDate,
+        remind: selectedRemind,
+        repeat: selectedRepeat,
+        color: selectedColor,
+      ),
+    );
   }
 
   selectDate() async {
@@ -239,13 +233,18 @@ class _AddTaskPageState extends State<AddTaskPage> {
     var date;
     if (isStart)
       date = await showTimePicker(
-          context: context,
-          initialTime: TimeOfDay.fromDateTime(DateTime.now()),);
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+      );
     else
       date = await showTimePicker(
-          context: context,
-          initialTime: TimeOfDay.fromDateTime(
-              DateTime.now().add(Duration(minutes: 15),),),);
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(
+          DateTime.now().add(
+            Duration(minutes: 15),
+          ),
+        ),
+      );
     String formatted = date.format(context);
     if (isStart)
       setState(() => startDate = formatted);

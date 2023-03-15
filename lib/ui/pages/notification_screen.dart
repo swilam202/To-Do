@@ -1,9 +1,6 @@
 import 'dart:io';
-import '../../services/theme_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-
 import '../theme.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -18,7 +15,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Get.isDarkMode? Themes.darkTheme.primaryColor:Themes.lightTheme.primaryColor,
+      backgroundColor: Get.isDarkMode
+          ? Themes.darkTheme.primaryColor
+          : Themes.lightTheme.primaryColor,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Platform.isIOS ? Icons.arrow_back_ios : Icons.arrow_back),
@@ -35,7 +34,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Get.isDarkMode?Colors.black:Colors.teal,
+        backgroundColor: Get.isDarkMode ? Colors.black : Colors.teal,
       ),
       body: Container(
         width: double.infinity,
@@ -67,7 +66,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 margin:
                     EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 20),
                 decoration: BoxDecoration(
-                  color:  Get.isDarkMode ? Themes.darkTheme.canvasColor:Themes.lightTheme.canvasColor,
+                  color: Get.isDarkMode
+                      ? Themes.darkTheme.canvasColor
+                      : Themes.lightTheme.canvasColor,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: SingleChildScrollView(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:todoapp/ui/theme.dart';
 
 class InputField extends StatelessWidget {
@@ -25,32 +24,32 @@ class InputField extends StatelessWidget {
           style: titleStyle,
         ),
         Container(
-            margin:
-                const EdgeInsets.only(top: 5, left: 10, right: 5, bottom: 10),
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.grey, width: 2.5)),
-            child: TextFormField(
-              controller: controller,
-              readOnly: widget != null ? true : false,
-              decoration: InputDecoration(
-                hintText: hint,
-                hintStyle: subTitleStyle,
-                suffixIcon: widget ?? SizedBox(),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                  ),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 0,
-                  ),
+          margin: const EdgeInsets.only(top: 5, left: 10, right: 5, bottom: 10),
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.grey, width: 2.5)),
+          child: TextFormField(
+            controller: controller,
+            readOnly: widget != null ? true : false,
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: subTitleStyle,
+              suffixIcon: widget ?? SizedBox(),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.transparent,
                 ),
               ),
-            )),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.transparent,
+                  width: 0,
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
