@@ -8,21 +8,25 @@ class DBHelper {
   static const String _dbName = 'tasks';
 
    static init() async {
-        String dbPath = await getDatabasesPath();
-        String path = await join(dbPath,'tod.db');
-        _db = await openDatabase(path, version: _version,
-            onCreate: (Database db, int version) async {
+       if (_db == null){
+         String dbPath = await getDatabasesPath();
+         String path = await join(dbPath,'tod.db');
+         _db = await openDatabase(path, version: _version,
+             onCreate: (Database db, int version) async {
 
-           return db.execute(
-            'CREATE TABLE $_dbName('
-                'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-                'title TEXT, note TEXT, date TEXT, '
-                'startTime TEXT, endTime TEXT, '
-                'remind INTEGER, repeat TEXT, '
-                'color INTEGER, '
-                'isCompleted INTEGER)'
-          );
-        });
+               return db.execute(
+                   'CREATE TABLE $_dbName('
+                       'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+                       'title TEXT, note TEXT, date TEXT, '
+                       'startTime TEXT, endTime TEXT, '
+                       'remind INTEGER, repeat TEXT, '
+                       'color INTEGER, '
+                       'isCompleted INTEGER)'
+               );
+             });
+       }
+       else
+         return;
 
   }
 

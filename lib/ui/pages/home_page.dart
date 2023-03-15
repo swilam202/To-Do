@@ -231,75 +231,73 @@ class _HomePageState extends State<HomePage> {
   }
 
   tasks() {
-    return Obx(() => (taskController.taskList.isNotEmpty)
-        ? RefreshIndicator(
-            onRefresh: () => taskController.getTask(),
-            child: ListView.builder(
-              // scrollDirection: SizeConfig.orientation == Orientation.landscape ? Axis.horizontal:Axis.horizontal,
-              itemBuilder: (_, index) {
-                var task = taskController.taskList[index];
-                if (task.date == DateFormat.yMd().format(currentDate) ||
-                    task.repeat == 'Daily') {
-                  var hours = task.endTime.toString().split(':')[0];
-                  var minute =
-                      task.endTime.toString().split(':')[1].substring(0, 2);
-                  notifyHelper.scheduledNotification(
-                      int.parse(hours), int.parse(minute), task);
-                  // notifyHelper.displyNotifcation(title: 'hello', body: 'task ');
-                  return AnimationConfiguration.staggeredList(
-                    duration: Duration(milliseconds: 500),
-                    position: index,
-                    child: SlideAnimation(
-                      verticalOffset: 500,
-                      horizontalOffset: -500,
-                      child: FadeInAnimation(
-                        child: GestureDetector(
-                          onTap: () {
-                            showButtomSheet(task);
-                            print('++++++++++++++++++++$hours++++++++++++');
-                            print('*****************$minute******************');
-                          },
-                          child: TaskTile(task),
-                        ),
+     taskController.getTask();
+    return Obx( (){
+      if(taskController.taskList.isNotEmpty)
+        return RefreshIndicator(
+          onRefresh: () => taskController.getTask(),
+          child: ListView.builder(
+            // scrollDirection: SizeConfig.orientation == Orientation.landscape ? Axis.horizontal:Axis.horizontal,
+            itemBuilder: (_, index) {
+              var task = taskController.taskList[index];
+              if (task.date == DateFormat.yMd().format(currentDate) ||
+                  task.repeat == 'Daily') {
+                var hours = task.endTime.toString().split(':')[0];
+                var minute =
+                task.endTime.toString().split(':')[1].substring(0, 2);
+                notifyHelper.scheduledNotification(
+                    int.parse(hours), int.parse(minute), task);
+                // notifyHelper.displyNotifcation(title: 'hello', body: 'task ');
+                return AnimationConfiguration.staggeredList(
+                  duration: Duration(milliseconds: 500),
+                  position: index,
+                  child: SlideAnimation(
+                    verticalOffset: 500,
+                    horizontalOffset: -500,
+                    child: FadeInAnimation(
+                      child: GestureDetector(
+                        onTap: () {
+                          showButtomSheet(task);
+                          print('++++++++++++++++++++$hours++++++++++++');
+                          print('*****************$minute******************');
+                        },
+                        child: TaskTile(task),
                       ),
                     ),
-                  );
-                } else {
-                  return SizedBox();
-                }
-              },
-              itemCount: taskController.taskList.length,
-            ),
-          )
-        : RefreshIndicator(
-            onRefresh: () => taskController.getTask(),
-            child: SingleChildScrollView(
-              child: Wrap(
-                direction: SizeConfig.orientation == Orientation.landscape
-                    ? Axis.horizontal
-                    : Axis.vertical,
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  SizedBox(height: 50),
-                  SvgPicture.asset(
-                    'images/task.svg',
-                    color: primaryClr.withOpacity(0.7),
-                    semanticsLabel: 'Task image',
-                    width: SizeConfig.orientation == Orientation.portrait
-                        ? 200
-                        : 50,
-                    height: SizeConfig.orientation == Orientation.portrait
-                        ? 200
-                        : 50,
                   ),
-                  Text(
-                    'No tasks for today!',
-                    style: headingStyle,
-                  ),
-                ],
-              ),
+                );
+              } else {
+                return SizedBox();
+              }
+            },
+            itemCount: taskController.taskList.length,
+          ),
+        );
+          else
+        return RefreshIndicator(
+          onRefresh: () => taskController.getTask(),
+          child: SingleChildScrollView(
+            child: Wrap(
+              direction: SizeConfig.orientation == Orientation.landscape
+                  ? Axis.horizontal
+                  : Axis.vertical,
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                SizedBox(height: 50),
+                Text(
+                  'No tasks for today!...',
+                  style: headingStyle,
+                ),
+              ],
             ),
-          ));
+          ),
+        );
+
+    }
+
+
+    );
   }
 }
+
