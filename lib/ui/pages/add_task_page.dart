@@ -193,7 +193,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       Get.back();
     } else {
       Get.snackbar('Warning',
-          'the title, note fields must not be null and make sure Start Date is earlier than End Date',
+          'the title & note field must not be null',
           snackPosition: SnackPosition.BOTTOM,
           icon: Icon(
             Icons.warning_amber,
